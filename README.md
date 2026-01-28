@@ -242,33 +242,39 @@ docker-compose logs -f
 
 **Calificación Automática en 1 Comando:**
 ```bash
-chmod +x grade.sh
-./grade.sh
+./calificar.sh
 ```
 
-El script calificará automáticamente:
-- ✅ **Sección 1** (40 pts): docker-compose.yml
-- ✅ **Sección 2** (30 pts): Configuración América
-- ✅ **Sección 3** (30 pts): Configuración Europa
-- ✅ **Sección 4** (BONUS 20 pts): Pruebas funcionales
+El script calificará automáticamente (100 puntos total):
 
-**Genera un reporte con:**
-- Desglose de puntuación por sección
-- Calificación final sobre 100
-- Archivo de reporte `grade_report_[timestamp].txt`
+| Sección | Puntos | Qué Valida |
+|---------|--------|------------|
+| **1. Docker Compose** | 20 pts | • Archivo existe y sintaxis válida<br>• 4 servicios definidos correctamente |
+| **2. Contenedores** | 20 pts | • Todos los contenedores en ejecución<br>• PostgreSQL, MySQL, 2x SymmetricDS |
+| **3. Bases de Datos** | 15 pts | • Conexión PostgreSQL y MySQL<br>• Tablas de negocio creadas |
+| **4. SymmetricDS** | 15 pts | • Tablas SymmetricDS creadas<br>• Grupos de nodos configurados |
+| **5. Replicación** | 30 pts | • INSERT bidireccional<br>• UPDATE bidireccional<br>• DELETE bidireccional |
 
-**Alternativa - Validación Manual:**
-```bash
-chmod +x validation/validate.sh
-./validation/validate.sh
+**Genera:**
+- ✅ Reporte en pantalla con desglose detallado
+- ✅ Archivo `calificacion_[timestamp].txt`
+- ✅ Retroalimentación por sección
+- ✅ Nota final (A, B, C, D, F)
+
+**Ejemplo de salida:**
 ```
+╔═════════════════════════════════════════════════╗
+║   CALIFICACIÓN: EXCELENTE (A) - 95%            ║
+╚═════════════════════════════════════════════════╝
 
-Este script valida:
-- ✅ Replicación de INSERT (PostgreSQL ↔ MySQL)
-- ✅ Replicación de UPDATE en ambas direcciones
-- ✅ Replicación de DELETE en ambas direcciones
-- ✅ Integridad de datos replicados
-- ✅ Replicación de las 4 tablas
+1. Docker Compose:            20 / 20
+2. Contenedores:              20 / 20
+3. Bases de Datos:            15 / 15
+4. SymmetricDS:               15 / 15
+5. Replicación:               25 / 30
+──────────────────────────────────────────
+TOTAL:                        95 / 100
+```
 
 ## ✅ Criterios de Evaluación (100 puntos + 20 BONUS)
 

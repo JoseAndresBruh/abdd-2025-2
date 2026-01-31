@@ -1,0 +1,54 @@
+services:
+  postgres-america:
+    image: postgres:15
+    container_name: postgres-america
+    environment:
+      POSTGRES_DB: globalshop
+      POSTGRES_USER: symmetricds
+      POSTGRES_PASSWORD: symmetricds
+    ports: ["5432:5432"]
+    volumes:
+      - ./init-db/postgres:/docker-entrypoint-initdb.d
+      - postgres-data:/var/lib/postgresql/data
+    networks: [globalshop-network]
+
+  mysql-europe:
+    image: mysql:8.0
+    container_name: mysql-europe
+    # ESTA LÍNEA ES LA QUE EVITA QUE EUROPA SE APAGUE
+    command: --default-authentication-plugin=mysql_native_password --log_bin_trust_function_creators=1
+    environment:
+      MYSQL_DATABASE: globalshop
+      MYSQL_USER: symmetricds
+      MYSQL_PASSWORD: symmetricds
+      MYSQL_ROOT_PASSWORD: rootpassword
+    ports: ["3306:3306"]
+    volumes:
+      - ./init-db/mysql:/docker-entrypoint-initdb.d
+      - mysql-data:/var/lib/mysql
+    networks: [globalshop-network]
+
+  symmetricds-america:
+    image: jumpmind/symmetricds:3.16
+    container_name: symmetricds-america
+    ports: ["31415:31415"]
+    volumes:
+      - ./symmetricds/america:/opt/symmetric-ds/engines
+    depends_on: [postgres-america]
+    networks: [globalshop-network]
+
+  symmetricds-europe:
+    image: jumpmind/symmetricds:3.16
+    container_name: symmetricds-europe
+    ports: ["31416:31416"]
+    volumes:
+      - ./symmetricds/europe:/opt/symmetric-ds/engines
+    depends_on: [mysql-europe, symmetricds-america]
+    networks: [globalshop-network]
+
+networks:
+  globalshop-network:
+    driver: bridge
+volumes:
+  postgres-data:
+  mysql-data:
